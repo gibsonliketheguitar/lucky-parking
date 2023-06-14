@@ -3,7 +3,6 @@ import * as Select from '@radix-ui/react-select';
 import clsx from "clsx";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import CheckIcon from '@mui/icons-material/Check';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { I_CalendarDate, T_Calendar, T_Month, T_Year, createCalendar } from "./utils/createCalendar";
@@ -77,9 +76,9 @@ export default function Calendar(props: any) {
   }, [selected])
 
   return (
-    <div className="p-6 w-1/2">
-      <div className="flex items-center justify-between h-14">
-        <div className="space-x-4">
+    <div className="w-72 drop-shadow-xl rounded-md">
+      <div className="px-6 pt-5 pb-4 m-auto flex items-center justify-between h-14">
+        <div className="space-x-2">
           <SelectOption
             id='Month'
             value={month}
@@ -97,15 +96,17 @@ export default function Calendar(props: any) {
             optionWidth={100}
           />
         </div>
-        <div className="flex justify-center space-x-9">
+        <div className="flex justify-center space-x-4">
           <button className='px-1' onClick={() => handleUpdateMonth('prev')}> <ArrowBackIosNewIcon sx={{ fontSize: 12 }} /></button>
-          <button className='px-1' onClick={() => handleUpdateMonth('next')}> <ArrowForwardIosIcon sx={{ fontSize: 12 }
-          } /></button>
+          <button className='px-1' onClick={() => handleUpdateMonth('next')}> <ArrowForwardIosIcon sx={{ fontSize: 12 }} /></button>
         </div>
       </div>
-      <div className="bg-light-100">
+      <div className="px-4 pb-2 flex justify-center">
         <table className='border-collapse'>
           <tbody>
+            <tr>
+              {DAYS_OF_WEEK.map((ele:string) => <td className="leading-4 font-normal text-black-400 text-sm text-center h-8 w-8 p-px">{ele}</td>)}
+            </tr>
             {calendar.map((week: any, weekIdx: number) => (
               <tr key={'month' + weekIdx}>
                 {week.map((ele: T_Calendar, colIdx: any) => {
@@ -121,15 +122,14 @@ export default function Calendar(props: any) {
                       key={`${month}/${day}/${year}`}
                       onClick={() => handleSelected(ele as I_CalendarDate)}
                       className={clsx(
-                        'rounded-full text-center h-10 w-10',
+                        'leading-4 font-normal text-sm text-center h-8 w-8 p-px',
                         !isCurrMonth && 'text-black-200',
-                        isSelected && 'bg-blue-500 text-white-100',
-                        !isSelected && 'hover:bg-blue-200'
+                        !isSelected && 'hover:bg-blue-200 rounded-full',
+                        isCurrDate && 'inline-flex justify-center items-center rounded-full border-[1px]',
+                        isSelected && 'rounded-full bg-blue-500 text-white-100'
                       )}
                     >
-                      <span className={clsx(isCurrDate && 'w-10 h-10 rounded-full border-2 border-black flex justify-center items-center')}>
-                        {day}
-                      </span>
+                      {day}
                     </td>
                   )
                 })}
@@ -141,29 +141,6 @@ export default function Calendar(props: any) {
     </div>
   )
 }
-
-
-/** TODO Calendar
- *    0 [x] : gen calendar
- *    1 []  : render calendar
-      2 []  : implement method
- *  
- *  TODO Selct
- *    1. figure out if we need to use ref for the select option so we can pass value and on change
- *    2. Create Dropdown menu 
- */
-
-/** Questions?
- *  > What is it is the current day, and we also selected the day too?
- *  > Buttons Left and Right Chevront
- *      - implement locally 
- *      - or have a global component
- * 
- *  > moment or what library do we want to use?
- *  > shoulue value of month and stuff be numeric or strict
- *  > control or uncontrolled
- */
-
 interface I_Select<T extends string | number> {
   id: string;
   options: Array<{ value: T | number, text: string }>;
@@ -175,12 +152,11 @@ interface I_Select<T extends string | number> {
 }
 
 function SelectOption<T extends string | number>({ id, options, onChange, placeholder, value, width, optionWidth }: I_Select<T>) {
-  console.log('what is width', width)
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger
         className={clsx(
-          "inline-flex items-center justify-center leading-none h-9 gap-2",
+          "inline-flex items-center justify-center leading-none h-9 gap-1",
           "font-normal text-xs outline-none",
           width && `w-[${width}px]`
         )}
@@ -194,7 +170,7 @@ function SelectOption<T extends string | number>({ id, options, onChange, placeh
       <Select.Portal>
         <Select.Content
           className={clsx(
-            'overflow-hidden bg-white-200 rounded-sm drop-shadow-xl z-50',
+            'overflow-hidden bg-white-100 rounded-sm drop-shadow-xl z-50',
             optionWidth && `w-[${optionWidth}px]`
           )}
           position="popper"
@@ -230,6 +206,9 @@ const SelectItem = React.forwardRef(({ children, className, ...props }: any, for
     </Select.Item>
   );
 });
+
+const DAYS_OF_WEEK = ["M", "T", "W", "T", "F", "S", "S"]
+
 
 const MONTHS = [
   { value: 0, text: 'January' },

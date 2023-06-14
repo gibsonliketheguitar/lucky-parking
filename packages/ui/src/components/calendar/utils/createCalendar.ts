@@ -20,7 +20,16 @@ export function createCalendar(year: T_Year, month: T_Month): T_Calendar[] {
 
   // Initialize a two-dimensional array to hold the calendar
   const calendar: any = [];
-  const isThisAndNextMonth = (date: Date, month: number) => date.getMonth() === month || date.getMonth() === month + 1
+  const isThisAndNextMonth = (date: Date, initMonth: number) => {
+    const currMonth = date.getMonth()
+    const isDec = initMonth === 11
+
+    return (
+      currMonth === initMonth ||
+      currMonth === initMonth + 1 ||
+      (isDec && currMonth === 0)
+    )
+  } 
   // Populate the calendar with dates
   for (let row = 0; row < 5; row++) {
     calendar[row] = [];
