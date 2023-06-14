@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import * as Select from '@radix-ui/react-select';
 import clsx from "clsx";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -8,14 +8,16 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { I_CalendarDate, T_Calendar, T_Month, T_Year, createCalendar } from "./utils/createCalendar";
 import { isEqual } from "./utils/isEqual";
 import { isObjectEmpty } from "./utils/isObjectEmpty";
+interface CalendarProps {
+  initDate: Date;
+  onSelectValueChange: (value: Date) => void
+}
 
-const today = new Date()
-
-export default function Calendar(props: any) {
-  const [date, setDate] = useState<Date>(today)
-  const [selected, setSelected] = useState<Date>(today)
-  const [month, setMonth] = useState<T_Month>(date.getMonth() as T_Month)
-  const [year, setYear] = useState<T_Year>(date.getFullYear() as T_Year)
+export default function Calendar({ initDate = new Date(), onSelectValueChange }: CalendarProps) {
+  const [date, setDate] = useState<Date>(initDate)
+  const [selected, setSelected] = useState<Date>(initDate)
+  const [month, setMonth] = useState<T_Month>(initDate.getMonth() as T_Month)
+  const [year, setYear] = useState<T_Year>(initDate.getFullYear() as T_Year)
   const calendar = createCalendar(year, month)
 
   function handleUpdateMonth(type: 'prev' | 'next') {
@@ -68,12 +70,9 @@ export default function Calendar(props: any) {
     const max = new Date(2023, 11, 31)
     const newDate = new Date(year, month, day)
     if (newDate > max || newDate < min) return
+    onSelectValueChange(newDate)
     setSelected(newDate)
   }
-
-  useEffect(() => {
-    console.log('what is selected', selected)
-  }, [selected])
 
   return (
     <div className="w-72 drop-shadow-xl rounded-md">
@@ -115,7 +114,7 @@ export default function Calendar(props: any) {
                   }
                   const { day, month, year } = ele as I_CalendarDate
                   const isSelected = isEqual({ day, month, year }, selected)
-                  const isCurrDate = isEqual({ day, month, year }, today)
+                  const isCurrDate = isEqual({ day, month, year }, initDate)
                   const isCurrMonth = month === date.getMonth()
                   return (
                     <td
@@ -153,7 +152,7 @@ interface I_Select<T extends string | number> {
 
 function SelectOption<T extends string | number>({ id, options, onChange, placeholder, value, width, optionWidth }: I_Select<T>) {
   return (
-    <Select.Root value={value} onValueChange={onChange}>
+    <Select.Root value={value as string} onValueChange={onChange}>
       <Select.Trigger
         className={clsx(
           "inline-flex items-center justify-center leading-none h-9 gap-1",
