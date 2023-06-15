@@ -1,5 +1,4 @@
 import React from "react";
-
 import clsx from "clsx";
 import {
   Content,
@@ -17,7 +16,17 @@ import {
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-export default function Select<T extends string | number>({ id, options, onChange, placeholder, value, width, optionWidth }: I_Select<T>) {
+interface SelectProps<T>{
+  id: string;
+  options: T[];
+  onChange: (value:string) => void,
+  placeholder: string,
+  value: T, 
+  width: number, 
+  optionWidth: number
+}
+
+export default function Select<T>({ id, options, onChange, placeholder, value, width, optionWidth }: SelectProps<T>) {
   return (
     <Root value={value as string} onValueChange={onChange}>
       <Trigger
@@ -56,9 +65,9 @@ export default function Select<T extends string | number>({ id, options, onChang
 }
 
 interface ItemProps {
-  className: string,
+  className?: string,
   children: any,
-  props: any,
+  props?: any,
   value: any,
 }
 

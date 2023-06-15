@@ -11,7 +11,8 @@ type CalendarStory = StoryObj<typeof Calendar>;
 export const Primary: CalendarStory = {
   render: (args) => <Calendar {...args}/>,
   args : {
-    
+    initDate: new Date(2025, 0, 1),
+    onSelectValueChange: (value: Date) => console.log(value)
   },
 };
 
