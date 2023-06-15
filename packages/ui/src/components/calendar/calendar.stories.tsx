@@ -3,7 +3,7 @@ import Calendar from "./calendar";
 
 const meta: Meta<typeof Calendar> = {
  title: "Components/Calendar",
-component: Calendar
+ component: Calendar
 }
 
 type CalendarStory = StoryObj<typeof Calendar>;
