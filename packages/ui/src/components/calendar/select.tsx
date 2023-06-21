@@ -20,8 +20,8 @@ interface SelectProps<T>{
   id: string;
   options: T[];
   onChange: (value:string) => void,
-  placeholder: string,
-  value: T, 
+  placeholder?: string,
+  value: number | 'string', 
   width: number, 
   optionWidth: number
 }
