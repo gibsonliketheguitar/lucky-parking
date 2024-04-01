@@ -76,7 +76,7 @@ export default function DatePicker(props: DatePickerProps) {
       }
 
       default:
-        console.log("oopies spaghetti o something went wrong!");
+        console.log("oopies mom's spaghetti o something went wrong!");
     }
   };
 
@@ -88,9 +88,8 @@ export default function DatePicker(props: DatePickerProps) {
   return (
     <div className="flex space-x-1">
       <Modal open={isCalendarVisible}>
-        <ModalTrigger asChild aria-label="open-calendar-modal">
+        <ModalTrigger asChild aria-label="open-date-range-modal">
           <div
-            aria-label="date-input-trigger"
             className={twMerge(
               "flex h-[48px] w-[420px] flex-auto flex-row items-center justify-start space-x-2 px-2",
               "bg-white-100 select-none rounded-sm outline outline-1",
@@ -100,7 +99,6 @@ export default function DatePicker(props: DatePickerProps) {
             <div className="flex flex-1 items-center justify-start space-x-1">
               <DateRangeIcon sx={{ width: 24, height: 24 }} />
               <div
-                data-testid="date-input-value"
                 className={twMerge(
                   "text-[15.88px] font-medium leading-[18.63px]",
                   isCalendarVisible ? "text-blue-500" : "text-black-300",
@@ -112,7 +110,6 @@ export default function DatePicker(props: DatePickerProps) {
             <div className="flex flex-1 items-center justify-start space-x-1">
               <ChevronRightIcon sx={{ width: 24, height: 24 }} />
               <div
-                data-testid="date-input-value"
                 className={twMerge(
                   "text-[15.88px] font-medium leading-[18.63px]",
                   isCalendarVisible ? "text-blue-500" : "text-black-300",
@@ -145,6 +142,7 @@ export default function DatePicker(props: DatePickerProps) {
           <div className="h-[256px] w-[512px]">
             {selected === "exact" ? (
               <DatePickerCalendar
+                key="date-picker-calendar"
                 startDate={startDate}
                 endDate={endDate}
                 setStartDate={setStartDate}
@@ -158,7 +156,7 @@ export default function DatePicker(props: DatePickerProps) {
 
           <div className="flex space-x-6">
             <div>
-              <label>Start Date</label>
+              <span>Start Date</span>
               <Input
                 id="start date"
                 className="h-8"
@@ -167,7 +165,7 @@ export default function DatePicker(props: DatePickerProps) {
             </div>
 
             <div>
-              <label>End Date</label>
+              <span>End Date</span>
               <Input id="end date" className="h-8" value={endDate ? formatToMiddleEndian(endDate) : "mm/dd/yyyy"} />
             </div>
           </div>
@@ -182,10 +180,10 @@ export default function DatePicker(props: DatePickerProps) {
 
             <div className="space-between flex space-x-3">
               <Button variant={ButtonVariant.outline} onClick={() => setCalendarVisible(false)}>
-                <p>Cancel</p>
+                <p>cancel</p>
               </Button>
               <Button variant={ButtonVariant.primary} onClick={handleApply}>
-                <p>Apply</p>
+                <p>apply</p>
               </Button>
             </div>
           </div>

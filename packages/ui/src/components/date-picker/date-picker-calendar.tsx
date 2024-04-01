@@ -9,6 +9,7 @@ import { CalendarDate, T_Calendar } from "../calendar/utils/create-calendar";
 import { twMerge } from "tailwind-merge";
 import { createTwoMonthCalendar } from "./utils/create-two-month-calendar";
 import { isEqual } from "../calendar/utils/is-equal";
+import { addMonths } from "date-fns";
 
 interface DatePickerCalendarProps {
   initDate?: Date;
@@ -22,15 +23,14 @@ interface DatePickerCalendarProps {
 export default function DatePickerCalendar(props: DatePickerCalendarProps) {
   const { initDate = new Date(), startDate, endDate, setStartDate, setEndDate } = props;
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(initDate);
   const [month, setMonth] = useState(initDate.getMonth() as Month);
   const [year, setYear] = useState(initDate.getFullYear());
   const [firstMonth, secondMonth] = createTwoMonthCalendar(year as Year, month);
 
   function handleUpdateMonth(type: "prev" | "next") {
     const modify = type === "prev" ? -1 : 1;
-    const newDate = new Date(date);
-    newDate.setMonth(date.getMonth() + modify);
+    const newDate = addMonths(new Date(date), modify);
 
     setMonth(newDate.getMonth() as Month);
     setYear(newDate.getFullYear() as Year);
@@ -75,19 +75,21 @@ export default function DatePickerCalendar(props: DatePickerCalendarProps) {
       {/**Calendar Month Nav */}
       <div className="flex h-[52px] flex-1 justify-between px-4">
         <div className="flex items-center justify-center space-x-5">
-          <button className="px-2" onClick={() => handleUpdateMonth("prev")}>
+          <button aria-label="prev-months" className="px-2" onClick={() => handleUpdateMonth("prev")}>
             <ArrowBackIosNewIcon sx={{ fontSize: 8, color: "#7A7A7B" }} />
           </button>
           <div>
-            {MONTH_NAMES[month]} {year}
+            <span aria-label="first-date-month"> {MONTH_NAMES[month]} </span>
+            <span aria-label="first-date-year">{year}</span>
           </div>
         </div>
 
         <div className="flex items-center justify-center space-x-5">
           <div>
-            {MONTH_NAMES[(month + 1) % 12]} {(month + 1) % 12 === 0 ? year + 1 : year}{" "}
+            <span aria-label="second-date-month"> {MONTH_NAMES[(month + 1) % 12]} </span>
+            <span aria-label="second-date-year"> {(month + 1) % 12 === 0 ? year + 1 : year} </span>
           </div>
-          <button className="px-2" onClick={() => handleUpdateMonth("next")}>
+          <button aria-label="next-months" className="px-2" onClick={() => handleUpdateMonth("next")}>
             <ArrowForwardIosIcon sx={{ fontSize: 8, color: "#7A7A7B" }} />
           </button>
         </div>
